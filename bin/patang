@@ -1,0 +1,38 @@
+#!/usr/bin/env ruby
+
+require 'fileutils'
+require 'yaml'
+require '~/code/patang/lib/patang.rb'
+
+opts = ARGV
+
+# creating a new blog
+if opts[0] == "new"
+  blogname = opts[1] || "mypatangblog"
+  p "Creating a new patang blog - #{blogname}"
+  FileUtils.mkdir_p   blogname
+  FileUtils.mkdir_p   "#{blogname}/_site"
+  FileUtils.mkdir_p   "#{blogname}/_posts"
+  FileUtils.mkdir_p   "#{blogname}/_layouts"
+  FileUtils.mkdir_p   "#{blogname}/public/css"
+  FileUtils.mkdir_p   "#{blogname}/public/javascripts"
+  FileUtils.mkdir_p   "#{blogname}/public/images"
+  FileUtils.touch     "#{blogname}/_meta.yml"
+  FileUtils.touch     "#{blogname}/public/default.html"
+end
+
+# Generate the blog post for the specified file
+if opts[0] == "build"
+  post_file = opts[1]
+  
+  post_file_path = File.expand_path("_posts/#{post_file}")
+  raise "There is no post by that name" unless File.exists? post_file_path
+  
+  #blog_meta = YAML::load_file("_meta.yml")
+  #blogname = blog_meta["patang"]  
+  #p "generating #{blog} post for: #{blogname} ..."
+  
+  
+  Patang.generate_post post_file 
+end  
+    

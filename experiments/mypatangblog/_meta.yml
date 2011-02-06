@@ -1,0 +1,14 @@
+---
+patang: mypatangblog
+
+posts:
+    - id: 1
+      title: hello-world
+      date: 12 jan 2010
+      link: hello.html
+    
+    - id: 2  
+      title: post-with-categories
+      date: 01 dec 2009
+      link: categories.html
+      categories: [ruby, programming]
