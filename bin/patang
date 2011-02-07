@@ -23,16 +23,11 @@ end
 
 # Generate the blog post for the specified file
 if opts[0] == "build"
+
   post_file = opts[1]
-  
   post_file_path = File.expand_path("_posts/#{post_file}")
   raise "There is no post by that name" unless File.exists? post_file_path
   
-  #blog_meta = YAML::load_file("_meta.yml")
-  #blogname = blog_meta["patang"]  
-  #p "generating #{blog} post for: #{blogname} ..."
-  
-  
-  Patang.generate_post post_file 
+  Patang.generate_post(post_file_path)  
 end  
     
