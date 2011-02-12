@@ -1,7 +1,4 @@
 #!/usr/bin/env ruby
-
-require 'fileutils'
-require 'yaml'
 require '~/code/patang/lib/patang.rb'
 
 opts = ARGV

@@ -1,16 +1,28 @@
+# stdlib
+require 'fileutils'
+require 'yaml'
+require 'time'
+
+# rubygems
+require 'rubygems'
+
+# gems
+require 'rdiscount'
+require 'liquid'
+
+require File.expand_path("../site.rb", __FILE__)
+require File.expand_path("../post.rb", __FILE__)
+
 module Patang
   
   class Patang
   end
 
   def self.generate_post post_file
-    site = Site.init
+    site = Site.new
     
-    post = Post.new(site, post_file)  
-    post.convert
-    post.render
-    
-    site.next_post_id += 1
+    post = Post.new(post_file, site)  
+    post.process
   end    
     
 end
