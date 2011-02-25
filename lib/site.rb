@@ -21,5 +21,8 @@ module Patang
     def finalize  
     end
     
+    def process_index
+    end
+    
   end
 end

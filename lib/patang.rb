@@ -9,6 +9,7 @@ require 'rubygems'
 # gems
 require 'rdiscount'
 require 'liquid'
+require 'sequel'
 
 require File.expand_path("../site.rb", __FILE__)
 require File.expand_path("../post.rb", __FILE__)
@@ -21,8 +22,17 @@ module Patang
   def self.generate_post post_file
     site = Site.new
     
-    post = Post.new(post_file, site)  
-    post.process
+    post = Post.filter(:post_file => post_file).first
+    post = Post.new(:post_file => post_file)            unless post 
+    
+    post.site = site
+    post.read_meta
+    post.convert
+    post.render
+    post.write
+    post.save
+    
+    site.process_index
   end    
     
 end

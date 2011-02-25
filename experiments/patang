@@ -6,6 +6,7 @@ opts = ARGV
 # creating a new blog
 if opts[0] == "new"
   blogname = opts[1] || "mypatangblog"
+  
   p "Creating a new patang blog - #{blogname}"
   FileUtils.mkdir_p   blogname
   FileUtils.mkdir_p   "#{blogname}/_site"
@@ -16,6 +17,16 @@ if opts[0] == "new"
   FileUtils.mkdir_p   "#{blogname}/public/images"
   FileUtils.touch     "#{blogname}/_meta.yml"
   FileUtils.touch     "#{blogname}/public/default.html"
+  
+  p "creating the meta-database"
+  db = Sequel.sqlite("#{blogname}/patang.db")
+  db.create_table :posts do
+      primary_key :id
+      String :post_file
+      DateTime :datetime
+      String :tags
+  end
+  p "done"  
 end
 
 # Generate the blog post for the specified file
