@@ -1,29 +1,30 @@
 module Patang
   
-  DB = Sequel.connect("sqlite://patang.db")  
-  class Post < Sequel::Model
-    
-    # schema :
-    #   id          PrimaryKey
-    #   post_file   String
-    #   datetime    DateTime (Time)
-    #   tags        String
-    
-
-    #attr_reader :raw_content        # the actual content (total content minus meta data)
-    #attr_accessor :content          # raw_content.to_html 
-    #attr_accessor :output           # content + layout html
+  class Post 
     attr_accessor :site
+    
+    def initialize post_file
+      read_meta(post_file)
+      @post_file_name = File.expand_path(post_file).split('/').last
+    end
     
     # read the YAML front matter, and update the post attributes
     #
-    def read_meta
-      separate_yfm_and_content
+    def read_meta post_file
+      separate_yfm_and_content(post_file)
 
       @title      = @yfm["title"] 
       @layout     = @yfm["layout"] || @yfm["template"] || "default"
       @permalink  = @yfm["permalink"]
       @datetime   = Time.parse(@yfm["date"]) || File.mtime(post_file)      
+    end
+    
+    # All major processing steps in one method
+    #
+    def process
+      convert
+      render
+      write
     end
     
     # convert from the markup format post is in, to html
@@ -72,6 +73,19 @@ module Patang
     def output_file
       filename = @permalink || @title.gsub(/\s/, '-')
       filename + ".html"
+    end
+    
+    def exists_in_db? 
+      !DB[:posts].filter(:post_file=>@post_file_name).empty?
+    end
+    
+    def create_db
+      id = DB[:posts].max(:id) + 1 
+      DB[:posts].insert(:id => id, :post_file => @post_file_name, :datetime => @datetime, :tags => @tags)
+    end
+    
+    def update_db
+      DB[:posts].filter(:post_file => @post_file).update(:datetime => @datetime, :tags => @tags)
     end
     
   end

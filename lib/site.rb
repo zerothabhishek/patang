@@ -1,27 +1,40 @@
 module Patang
+
   class Site
 
     attr_reader :root
     attr_reader :name
-    attr_accessor :next_post_id
+    attr_reader :posts
+
+    def self.this_one meta_path=nil
+      self.new(meta_path)
+    end
     
-    def initialize
+    def initialize meta_path=nil
       @root = FileUtils.pwd
-      @meta_path = "#{self.root}/_meta.yml"
+      @meta_path = meta_path || "#{root}/_meta.yml"
       @meta = YAML.load_file @meta_path
       @name = @meta["patang"]
-      @next_post_id = @meta["next_post_id"]
     end
     
-    def next_post_id=id
-      @meta["next_post_id"] = id
-      YAML.dump(@meta, File.open(@meta_path,'w'))
-    end
-          
     def finalize  
     end
     
-    def process_index
+    # 1. generates _site/index.html
+    # 2. generates tag indexes as _site/:tag/index.html
+    def generate_indexes
+      @posts = DB[:posts].all
+      index_layout = File.read "#{root}/_layouts/index.html"
+      @output = Liquid::Template.parse(index_layout).render('site'=>self)
+      path = "#{root}/_site/index.html"
+      File.open(path, 'w'){ |f| f.write(@output) }
+    end
+    
+    def to_liquid
+      {
+        "name" => @name,
+        "posts" => @posts
+      }
     end
     
   end

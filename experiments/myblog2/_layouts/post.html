@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>{{ post.title }} : Abhishek Yadav's t-log</title>
+   <meta name="author" content="Abhishek Yadav" />
+   
+   <!-- Indigenous CSS -->
+   <link rel="stylesheet" href="/css/blog.css" type="text/css" />
+
+</head>
+<body>
+
+<div class="site">
+  
+  <div id="header">
+	<div class="name">
+	  <a href="/">Abhishek Yadav's <span class="italic">t-log</span></a>
+	  {{post.datetime}}, on {{ post.day }}
+	</div>
+  </div>
+
+  <div id="content">
+  {{ post.content }}
+  </div>	
+
+  <div id="footer">
+  </div>
+
+</div>
+
+</body>
+</html>

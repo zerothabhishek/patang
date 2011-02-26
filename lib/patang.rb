@@ -16,24 +16,23 @@ require File.expand_path("../post.rb", __FILE__)
 
 module Patang
   
+  DB = Sequel.connect("sqlite://patang.db")
+  
   class Patang
   end
 
   def self.generate_post post_file
-    site = Site.new
-    
-    post = Post.filter(:post_file => post_file).first
-    post = Post.new(:post_file => post_file)            unless post 
-    
-    post.site = site
-    post.read_meta
-    post.convert
-    post.render
-    post.write
-    post.save
-    
-    site.process_index
-  end    
+    post = Post.new(post_file)
+    post.site = Site.this_one
+    post.process    
+    post.exists_in_db? ? post.update_db : post.create_db
+    site.generate_indexes
+  end
+  
+  def self.generate_index
+    site = Site.this_one
+    site.generate_indexes
+  end      
     
 end
 

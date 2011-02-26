@@ -15,3 +15,11 @@
 21 feb 2010
 
 wtf - if you make a class a model using Sequel, you can't have the initialize method in it.
+
+25feb2010
+# schema :
+#   id          PrimaryKey
+#   post_file   String
+#   datetime    DateTime (Time)
+#   tags        String
+
